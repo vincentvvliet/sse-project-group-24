@@ -5,30 +5,31 @@ PYTHON_OLD="python3.11"
 PYTHON_NEW="python3.14"
 
 # Define test script
-TEST_SCRIPT="benchmark.py"
+TEST_SCRIPT="collatz_benchmark.py"
 
 # Define output file
 OUTPUT_FILE="energy_results.csv"
 
 # Ensure EnergiBridge is built
-ENERGIBRIDGE="./energibridge/target/release/energibridge"
+ENERGIBRIDGE="$HOME/Desktop/energibridge/target/release/energibridge"
 
 # Function to run the test and collect energy data
 run_experiment() {
     local python_version=$1
     local result_file=$2
 
-    echo "Running matrix multiplication with $python_version..."
+    echo "Running collatz series with $python_version..."
 
     # Start energy measurement
-    $ENERGIBRIDGE -o "$result_file" --summary &
+    sudo $ENERGIBRIDGE -o "$result_file" --summary sleep 20 &
     ENERGY_PID=$!
+    sleep 1 
 
     # Run benchmark
     $python_version $TEST_SCRIPT > "execution_time_$python_version.txt"
 
     # Stop energy measurement
-    kill $ENERGY_PID
+    wait $ENERGY_PID
 
     echo "Completed: $python_version"
 }

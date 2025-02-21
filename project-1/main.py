@@ -59,6 +59,7 @@ for version, run_number in test_order:
     python_exe = python_311 if version  == "3.11" else python_314
     label = f"Python {version}"
     run_test(python_exe, f"Python{version}", run_number)
+    time.sleep(60)
 
 print("Experiment complete! Energy results saved in energy_results.csv")
 

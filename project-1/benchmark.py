@@ -1,8 +1,9 @@
 import random
 import time
 
-def generate_matrix(size):
+def generate_matrix(size, seed):
     """Generates a square matrix filled with random numbers."""
+    random.seed(seed)
     return [[random.random() for _ in range(size)] for _ in range(size)]
 
 def multiply_matrices(A, B):
@@ -17,11 +18,11 @@ def multiply_matrices(A, B):
     
     return result
 
-def matrix_multiplication_benchmark(size=300):
+def matrix_multiplication_benchmark(size=300, seed=42):
     """Runs the matrix multiplication benchmark and records execution time."""
     print(f"Generating {size}x{size} matrices...")
-    A = generate_matrix(size)
-    B = generate_matrix(size)
+    A = generate_matrix(size, seed)
+    B = generate_matrix(size, seed + 1)
 
     print("Starting matrix multiplication...")
     start_time = time.time()

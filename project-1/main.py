@@ -17,7 +17,7 @@ energybridge_exe = r"C:\Users\Luc\Desktop\energibridge\energibridge.exe"
 output_dir = r"C:\Users\Luc\sse-project-group-24\project-1\energy_results"
 os.makedirs(output_dir, exist_ok=True)
 
-def warm_up_cpu(duration=30):
+def warm_up_cpu(duration=300):
     print("Warming up CPU for 5 minutes...")
     start_time = time.time()
     while time.time() - start_time < duration:

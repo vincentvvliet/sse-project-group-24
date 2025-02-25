@@ -107,3 +107,26 @@ if __name__ == "__main__":
             time.sleep(REST_TIME)  # Rest period to stabilize power draw
 
     print("\nBenchmark Complete! Results saved in benchmark_results.csv")
+
+# SHUFFLE_RUNS = True 
+
+# if __name__ == "__main__":
+#     # Create an alternating list of runs
+#     runs = [("3.13", PYTHON_313), ("3.14", PYTHON_314)] * NUM_RUNS
+
+#     if SHUFFLE_RUNS:
+#         random.shuffle(runs)
+
+#     with open("benchmark_results.csv", "w", newline="") as file:
+#         writer = csv.writer(file)
+#         writer.writerow(["Run", "Python Version", "Execution Time (s)", "Energy (J)"])
+
+#         for i, (version, python_path) in enumerate(runs, start=1):
+#             print(f"Running Test {i}/{NUM_RUNS * 2} - Python {version}")
+
+#             exec_time, energy_used = measure_energy(python_path)
+
+#             writer.writerow([i, version, exec_time, energy_used])
+#             time.sleep(REST_TIME)  # Rest period to stabilize power draw
+
+#     print("\nBenchmark Complete! Results saved in benchmark_results.csv")

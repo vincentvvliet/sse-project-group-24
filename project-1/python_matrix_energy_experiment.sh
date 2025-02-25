@@ -7,48 +7,69 @@ PYTHON_NEW="python3.14"
 # Define test script
 TEST_SCRIPT="collatz_benchmark.py"
 
-# Define output file
+# Define output file for combined results
 OUTPUT_FILE="energy_results.csv"
 
-# Ensure EnergiBridge is built
+# Path to EnergiBridge
 ENERGIBRIDGE="$HOME/Desktop/energibridge/target/release/energibridge"
 
-# Function to run the test and collect energy data
+# Increase priority to reduce OS interference
+echo "Increasing script priority..."
+sudo renice -n -20 -p $$
+
+# Function to run the test and collect energy data over a fixed duration
 run_experiment() {
     local python_version=$1
     local result_file=$2
+    local summary_file="energybridge_output_${python_version}.txt"
 
-    echo "Running collatz series with $python_version..."
-
-    # Start energy measurement
-    sudo $ENERGIBRIDGE -o "$result_file" --summary sleep 20 &
+    # Start EnergiBridge measurement for 20 seconds
+    sudo "$ENERGIBRIDGE" -o "$result_file" --summary sleep 20 > "$summary_file" 2>&1 &
     ENERGY_PID=$!
-    sleep 1 
+    sleep 1
 
-    # Run benchmark
-    $python_version $TEST_SCRIPT > "execution_time_$python_version.txt"
+    # Run the benchmark repeatedly for 20 seconds to generate measurable load
+    local end_time
+    end_time=$(($(date +%s) + 20))
+    while [ "$(date +%s)" -lt "$end_time" ]; do
+         "$python_version" "$TEST_SCRIPT" > /dev/null
+    done > /dev/null
 
-    # Stop energy measurement
-    wait $ENERGY_PID
+    # Wait for EnergiBridge to finish
+    wait "$ENERGY_PID"
 
-    echo "Completed: $python_version"
+    # Example line in $summary_file:
+    # Energy consumption in joules: 242.35 for 20.01 sec of execution.
+
+    # Parse Joules
+    local energy_joules
+    energy_joules=$(grep -i "Energy consumption in joules:" "$summary_file" \
+        | sed -n 's/.*Energy consumption in joules: \([0-9.]*\).*/\1/p')
+
+    # Parse Time
+    local energy_time
+    energy_time=$(grep -i "Energy consumption in joules:" "$summary_file" \
+        | sed -n 's/.* for \([0-9.]*\) sec of execution.*/\1/p')
+
+    # Return them comma-separated
+    echo "$energy_joules,$energy_time"
 }
 
 # Write CSV header
-echo "Python Version, Energy (Joules), Time (s)" > $OUTPUT_FILE
+echo "Python Version, Joules, Energy_Time" > "$OUTPUT_FILE"
 
-# Run experiment for both Python versions
-run_experiment $PYTHON_OLD "energy_old.csv"
-run_experiment $PYTHON_NEW "energy_new.csv"
+# Run experiment for python3.11
+old_data=$(run_experiment "$PYTHON_OLD" "energy_old.csv")
+old_joules=$(echo "$old_data" | cut -d',' -f1)
+old_time=$(echo "$old_data" | cut -d',' -f2)
 
-# Combine results
-OLD_ENERGY=$(tail -n 1 energy_old.csv | cut -d',' -f2)
-NEW_ENERGY=$(tail -n 1 energy_new.csv | cut -d',' -f2)
-OLD_TIME=$(grep 'Execution Time' execution_time_python3.11.txt | awk '{print $3}')
-NEW_TIME=$(grep 'Execution Time' execution_time_python3.14.txt | awk '{print $3}')
+# Run experiment for python3.14
+new_data=$(run_experiment "$PYTHON_NEW" "energy_new.csv")
+new_joules=$(echo "$new_data" | cut -d',' -f1)
+new_time=$(echo "$new_data" | cut -d',' -f2)
 
-echo "3.11, $OLD_ENERGY, $OLD_TIME" >> $OUTPUT_FILE
-echo "3.14, $NEW_ENERGY, $NEW_TIME" >> $OUTPUT_FILE
+# Append numeric values to CSV
+echo "3.11, $old_joules, $old_time" >> "$OUTPUT_FILE"
+echo "3.14, $new_joules, $new_time" >> "$OUTPUT_FILE"
 
-echo "Experiment completed! Results saved in $OUTPUT_FILE."
-
+echo "Results saved in $OUTPUT_FILE"

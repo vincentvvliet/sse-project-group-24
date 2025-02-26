@@ -1,3 +1,206 @@
-Python Version, Joules, Energy_Time
-3.11, 387.6311456851958, 20.101114
-3.14, 398.99859529876693, 20.079863
+PythonVersion,Task,Method,Mode,Joules,Energy_Time,Script_ExecTime
+----------------------------------------
+🚀 Running Experiment: 3.14 | collatz_benchmark.py | normal | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=343.29604775714836 | Energy_Time=20.086815 | ExecTime=0.000003
+3.14,collatz_benchmark.py,normal,,343.29604775714836,20.086815,0.000003
+----------------------------------------
+🚀 Running Experiment: 3.11 | collatz_benchmark.py | normal | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=308.0260277223584 | Energy_Time=20.090216 | ExecTime=0.000003
+3.11,collatz_benchmark.py,normal,,308.0260277223584,20.090216,0.000003
+----------------------------------------
+🚀 Running Experiment: 3.14 | collatz_benchmark.py | optimized | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=433.036496936798 | Energy_Time=20.026829 | ExecTime=0.000003
+3.14,collatz_benchmark.py,optimized,,433.036496936798,20.026829,0.000003
+----------------------------------------
+🚀 Running Experiment: 3.14 | matrix_benchmark.py | optimized | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=388.3583067216876 | Energy_Time=20.055208 | ExecTime=0.891063
+3.14,matrix_benchmark.py,optimized,,388.3583067216876,20.055208,0.891063
+----------------------------------------
+🚀 Running Experiment: 3.14 | collatz_benchmark.py | normal | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=442.88990146636985 | Energy_Time=20.029602 | ExecTime=0.000003
+3.14,collatz_benchmark.py,normal,,442.88990146636985,20.029602,0.000003
+----------------------------------------
+🚀 Running Experiment: 3.14 | matrix_benchmark.py | naive | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=323.1235750694278 | Energy_Time=20.075768 | ExecTime=0.905892
+3.14,matrix_benchmark.py,naive,,323.1235750694278,20.075768,0.905892
+----------------------------------------
+🚀 Running Experiment: 3.14 | matrix_benchmark.py | naive | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=361.7346729984283 | Energy_Time=20.066048 | ExecTime=0.885157
+3.14,matrix_benchmark.py,naive,,361.7346729984283,20.066048,0.885157
+----------------------------------------
+🚀 Running Experiment: 3.14 | matrix_benchmark.py | optimized | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=463.4619995460511 | Energy_Time=20.05751 | ExecTime=0.870507
+3.14,matrix_benchmark.py,optimized,,463.4619995460511,20.05751,0.870507
+----------------------------------------
+🚀 Running Experiment: 3.14 | collatz_benchmark.py | optimized | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=310.56052169227627 | Energy_Time=20.095303 | ExecTime=0.000005
+3.14,collatz_benchmark.py,optimized,,310.56052169227627,20.095303,0.000005
+----------------------------------------
+🚀 Running Experiment: 3.11 | matrix_benchmark.py | naive | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=486.44230021476767 | Energy_Time=20.010487 | ExecTime=0.865855
+3.11,matrix_benchmark.py,naive,,486.44230021476767,20.010487,0.865855
+----------------------------------------
+🚀 Running Experiment: 3.11 | matrix_benchmark.py | naive | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=388.07371005725855 | Energy_Time=20.057985 | ExecTime=0.788675
+3.11,matrix_benchmark.py,naive,,388.07371005725855,20.057985,0.788675
+----------------------------------------
+🚀 Running Experiment: 3.14 | collatz_benchmark.py | optimized | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=343.556652584076 | Energy_Time=20.08153 | ExecTime=0.000003
+3.14,collatz_benchmark.py,optimized,,343.556652584076,20.08153,0.000003
+----------------------------------------
+🚀 Running Experiment: 3.11 | matrix_benchmark.py | naive | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=357.98592963027954 | Energy_Time=20.090109 | ExecTime=0.822987
+3.11,matrix_benchmark.py,naive,,357.98592963027954,20.090109,0.822987
+----------------------------------------
+🚀 Running Experiment: 3.11 | collatz_benchmark.py | normal | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=333.83124127388015 | Energy_Time=20.091745 | ExecTime=0.000003
+3.11,collatz_benchmark.py,normal,,333.83124127388015,20.091745,0.000003
+----------------------------------------
+🚀 Running Experiment: 3.11 | matrix_benchmark.py | naive | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=354.99494449806207 | Energy_Time=20.141598 | ExecTime=0.786135
+3.11,matrix_benchmark.py,naive,,354.99494449806207,20.141598,0.786135
+----------------------------------------
+🚀 Running Experiment: 3.14 | collatz_benchmark.py | optimized | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=332.5323271579742 | Energy_Time=20.121922 | ExecTime=0.000004
+3.14,collatz_benchmark.py,optimized,,332.5323271579742,20.121922,0.000004
+----------------------------------------
+🚀 Running Experiment: 3.11 | collatz_benchmark.py | normal | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=333.0771144456863 | Energy_Time=20.11126 | ExecTime=0.000002
+3.11,collatz_benchmark.py,normal,,333.0771144456863,20.11126,0.000002
+----------------------------------------
+🚀 Running Experiment: 3.11 | collatz_benchmark.py | normal | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=337.2329205808642 | Energy_Time=20.115837 | ExecTime=0.000003
+3.11,collatz_benchmark.py,normal,,337.2329205808642,20.115837,0.000003
+----------------------------------------
+🚀 Running Experiment: 3.14 | matrix_benchmark.py | naive | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=340.27831604480707 | Energy_Time=20.128613 | ExecTime=0.844700
+3.14,matrix_benchmark.py,naive,,340.27831604480707,20.128613,0.844700
+----------------------------------------
+🚀 Running Experiment: 3.14 | collatz_benchmark.py | optimized | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=340.6130186157225 | Energy_Time=20.115868 | ExecTime=0.000006
+3.14,collatz_benchmark.py,optimized,,340.6130186157225,20.115868,0.000006
+----------------------------------------
+🚀 Running Experiment: 3.11 | matrix_benchmark.py | naive | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=354.6339464454651 | Energy_Time=20.123127 | ExecTime=0.769478
+3.11,matrix_benchmark.py,naive,,354.6339464454651,20.123127,0.769478
+----------------------------------------
+🚀 Running Experiment: 3.11 | matrix_benchmark.py | naive | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=371.07497124576565 | Energy_Time=20.068272 | ExecTime=0.764139
+3.11,matrix_benchmark.py,naive,,371.07497124576565,20.068272,0.764139
+----------------------------------------
+🚀 Running Experiment: 3.11 | matrix_benchmark.py | naive | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=354.8673081626892 | Energy_Time=20.075052 | ExecTime=0.787212
+3.11,matrix_benchmark.py,naive,,354.8673081626892,20.075052,0.787212
+----------------------------------------
+🚀 Running Experiment: 3.14 | collatz_benchmark.py | optimized | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=334.4155865306854 | Energy_Time=20.091412 | ExecTime=0.000005
+3.14,collatz_benchmark.py,optimized,,334.4155865306854,20.091412,0.000005
+----------------------------------------
+🚀 Running Experiment: 3.14 | matrix_benchmark.py | optimized | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=344.80224336814877 | Energy_Time=20.090618 | ExecTime=0.780566
+3.14,matrix_benchmark.py,optimized,,344.80224336814877,20.090618,0.780566
+----------------------------------------
+🚀 Running Experiment: 3.11 | collatz_benchmark.py | normal | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=356.0434730291364 | Energy_Time=20.08939 | ExecTime=0.000003
+3.11,collatz_benchmark.py,normal,,356.0434730291364,20.08939,0.000003
+----------------------------------------
+🚀 Running Experiment: 3.14 | collatz_benchmark.py | optimized | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=332.79151116561894 | Energy_Time=20.08703 | ExecTime=0.000003
+3.14,collatz_benchmark.py,optimized,,332.79151116561894,20.08703,0.000003
+----------------------------------------
+🚀 Running Experiment: 3.14 | collatz_benchmark.py | normal | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=333.3929818420409 | Energy_Time=20.09645 | ExecTime=0.000003
+3.14,collatz_benchmark.py,normal,,333.3929818420409,20.09645,0.000003
+----------------------------------------
+🚀 Running Experiment: 3.11 | matrix_benchmark.py | naive | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=403.00255580615993 | Energy_Time=20.02987 | ExecTime=0.765677
+3.11,matrix_benchmark.py,naive,,403.00255580615993,20.02987,0.765677
+----------------------------------------
+🚀 Running Experiment: 3.11 | collatz_benchmark.py | normal | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=334.709200556755 | Energy_Time=20.081774 | ExecTime=0.000002
+3.11,collatz_benchmark.py,normal,,334.709200556755,20.081774,0.000002
+----------------------------------------
+🚀 Running Experiment: 3.14 | matrix_benchmark.py | naive | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=377.9651803073882 | Energy_Time=20.07116 | ExecTime=0.823900
+3.14,matrix_benchmark.py,naive,,377.9651803073882,20.07116,0.823900
+----------------------------------------
+🚀 Running Experiment: 3.14 | matrix_benchmark.py | optimized | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=335.23353539752947 | Energy_Time=20.094833 | ExecTime=0.804398
+3.14,matrix_benchmark.py,optimized,,335.23353539752947,20.094833,0.804398
+----------------------------------------
+🚀 Running Experiment: 3.14 | collatz_benchmark.py | normal | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=313.8102592210772 | Energy_Time=20.091919 | ExecTime=0.000003
+3.14,collatz_benchmark.py,normal,,313.8102592210772,20.091919,0.000003
+----------------------------------------
+🚀 Running Experiment: 3.11 | matrix_benchmark.py | naive | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=337.7456876297 | Energy_Time=20.095556 | ExecTime=0.771625
+3.11,matrix_benchmark.py,naive,,337.7456876297,20.095556,0.771625
+----------------------------------------
+🚀 Running Experiment: 3.14 | collatz_benchmark.py | normal | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=317.97302560043335 | Energy_Time=20.100925 | ExecTime=0.000004
+3.14,collatz_benchmark.py,normal,,317.97302560043335,20.100925,0.000004
+----------------------------------------
+🚀 Running Experiment: 3.14 | collatz_benchmark.py | optimized | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=320.3025194091799 | Energy_Time=20.16002 | ExecTime=0.000003
+3.14,collatz_benchmark.py,optimized,,320.3025194091799,20.16002,0.000003
+----------------------------------------
+🚀 Running Experiment: 3.11 | collatz_benchmark.py | normal | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=320.78531381511664 | Energy_Time=20.18681 | ExecTime=0.000003
+3.11,collatz_benchmark.py,normal,,320.78531381511664,20.18681,0.000003
+----------------------------------------
+🚀 Running Experiment: 3.14 | collatz_benchmark.py | normal | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=317.26334210205056 | Energy_Time=20.152905 | ExecTime=0.000003
+3.14,collatz_benchmark.py,normal,,317.26334210205056,20.152905,0.000003
+----------------------------------------
+🚀 Running Experiment: 3.14 | collatz_benchmark.py | optimized | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=318.0546778573989 | Energy_Time=20.136917 | ExecTime=0.000003
+3.14,collatz_benchmark.py,optimized,,318.0546778573989,20.136917,0.000003
+----------------------------------------
+🚀 Running Experiment: 3.14 | collatz_benchmark.py | normal | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=2981.80322957778 | Energy_Time=20.153446 | ExecTime=0.000004
+3.14,collatz_benchmark.py,normal,,2981.80322957778,20.153446,0.000004
+----------------------------------------
+🚀 Running Experiment: 3.14 | matrix_benchmark.py | naive | 
+⚡ Starting EnergiBridge...
+✅ Results: Joules=211.26967919063563 | Energy_Time=20.018476 | ExecTime=0.811878
+3.14,matrix_benchmark.py,naive,,211.26967919063563,20.018476,0.811878

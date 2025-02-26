@@ -1,75 +1,145 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Define Python versions
-PYTHON_OLD="python3.11"
-PYTHON_NEW="python3.14"
-
-# Define test script
-TEST_SCRIPT="collatz_benchmark.py"
-
-# Define output file for combined results
-OUTPUT_FILE="energy_results.csv"
+# Python scripts
+COLLATZ_SCRIPT="collatz_benchmark.py"
+MATRIX_SCRIPT="matrix_benchmark.py"
 
 # Path to EnergiBridge
 ENERGIBRIDGE="$HOME/Desktop/energibridge/target/release/energibridge"
 
-# Increase priority to reduce OS interference
+# Output file
+OUTPUT_FILE="energy_results.csv"
+
+echo "========================="
+echo "🏁 Starting Python Energy Benchmarking"
+echo "========================="
 echo "Increasing script priority..."
-sudo renice -n -20 -p $$
+sudo renice -n -20 -p $$ >/dev/null
 
-# Function to run the test and collect energy data over a fixed duration
+# 🛠 Check Python versions
+echo "🔍 Checking Python versions..."
+python3.11 --version || { echo "❌ Python 3.11 not found!"; exit 1; }
+python3.14 --version || { echo "❌ Python 3.14 not found!"; exit 1; }
+echo "✅ Python versions are available."
+
+# 🏋️‍♂️ Warm-up CPU to ensure accurate measurements
+echo "🔥 Warming up CPU for 5 minutes..."
+end_time=$(( $(date +%s) + 300 ))
+while [ "$(date +%s)" -lt "$end_time" ]; do
+    python3 -c "x = [i*i for i in range(10**6)]" >/dev/null 2>&1
+done
+echo "✅ Warm-up complete!"
+
+# 🏗 Define test scenarios (10 per version per method + 3.14 with optimizations)
+declare -a scenarios
+for i in $(seq 10); do
+  scenarios+=("3.11-collatz-normal")
+  scenarios+=("3.14-collatz-normal")
+  scenarios+=("3.14-collatz-optimized")
+  scenarios+=("3.11-matrix-naive")
+  scenarios+=("3.14-matrix-naive")
+  scenarios+=("3.14-matrix-optimized")
+done
+
+# 🎲 Shuffle the scenarios (Fisher-Yates shuffle)
+for ((i=${#scenarios[@]}-1; i>0; i--)); do
+  j=$((RANDOM % (i+1)))
+  tmp="${scenarios[$i]}"
+  scenarios[$i]="${scenarios[$j]}"
+  scenarios[$j]="$tmp"
+done
+
+# 📌 Function to run a single experiment
 run_experiment() {
-    local python_version=$1
-    local result_file=$2
-    local summary_file="energybridge_output_${python_version}.txt"
+    local pyversion=$1
+    local script_name=$2
+    local method=$3
+    local mode=$4  # normal or optimized
 
-    # Start EnergiBridge measurement for 20 seconds
+    echo "----------------------------------------"
+    echo "🚀 Running Experiment: $pyversion | $script_name | $method | $mode"
+    
+    # Choose the correct Python command
+    if [[ "$mode" == "optimized" ]]; then
+        python_cmd="python$pyversion --enable-optimizations"
+    else
+        python_cmd="python$pyversion"
+    fi
+
+    # Output files
+    local result_file="energy_${pyversion}_${script_name}_${method}_${mode}.csv"
+    local summary_file="energybridge_output_${pyversion}_${script_name}_${method}_${mode}.txt"
+
+    # ✅ Check if EnergiBridge is executable
+    if [ ! -x "$ENERGIBRIDGE" ]; then
+        echo "❌ EnergiBridge not found or not executable! Exiting."
+        exit 1
+    fi
+
+    # 🚀 Start EnergiBridge monitoring
+    echo "⚡ Starting EnergiBridge..."
     sudo "$ENERGIBRIDGE" -o "$result_file" --summary sleep 20 > "$summary_file" 2>&1 &
     ENERGY_PID=$!
-    sleep 1
+    sleep 1  # Allow EnergiBridge to initialize
 
-    # Run the benchmark repeatedly for 20 seconds to generate measurable load
-    local end_time
-    end_time=$(($(date +%s) + 20))
+    # 🏁 Run the benchmark for 20 seconds
+    local end_time=$(( $(date +%s) + 20 ))
     while [ "$(date +%s)" -lt "$end_time" ]; do
-         "$python_version" "$TEST_SCRIPT" > /dev/null
-    done > /dev/null
+         $python_cmd "$script_name" "$method" >/dev/null 2>&1
+    done
 
-    # Wait for EnergiBridge to finish
+    # 🕐 Wait for EnergiBridge to complete
     wait "$ENERGY_PID"
 
-    # Example line in $summary_file:
-    # Energy consumption in joules: 242.35 for 20.01 sec of execution.
+    # 📊 Extract energy consumption & execution time
+    local energy_joules=$(grep -i "Energy consumption in joules:" "$summary_file" | sed -n 's/.*Energy consumption in joules: \([0-9.]*\).*/\1/p')
+    local energy_time=$(grep -i "Energy consumption in joules:" "$summary_file" | sed -n 's/.* for \([0-9.]*\) sec of execution.*/\1/p')
+    
+    # 🔍 Run benchmark script once to get execution time
+    local script_exec_time=$($python_cmd "$script_name" "$method" 2>&1 | awk '/Execution Time|Matrix multiply/ {print $(NF-1)}')
 
-    # Parse Joules
-    local energy_joules
-    energy_joules=$(grep -i "Energy consumption in joules:" "$summary_file" \
-        | sed -n 's/.*Energy consumption in joules: \([0-9.]*\).*/\1/p')
+    # 🛑 Handle missing values
+    energy_joules=${energy_joules:-"N/A"}
+    energy_time=${energy_time:-"N/A"}
+    script_exec_time=${script_exec_time:-"N/A"}
 
-    # Parse Time
-    local energy_time
-    energy_time=$(grep -i "Energy consumption in joules:" "$summary_file" \
-        | sed -n 's/.* for \([0-9.]*\) sec of execution.*/\1/p')
+    echo "✅ Results: Joules=$energy_joules | Energy_Time=$energy_time | ExecTime=$script_exec_time"
 
-    # Return them comma-separated
-    echo "$energy_joules,$energy_time"
+    # Return results as CSV
+    echo "$pyversion,$script_name,$method,$mode,$energy_joules,$energy_time,$script_exec_time"
 }
 
-# Write CSV header
-echo "Python Version, Joules, Energy_Time" > "$OUTPUT_FILE"
+# 📝 Write CSV header
+echo "PythonVersion,Task,Method,Mode,Joules,Energy_Time,Script_ExecTime" > "$OUTPUT_FILE"
 
-# Run experiment for python3.11
-old_data=$(run_experiment "$PYTHON_OLD" "energy_old.csv")
-old_joules=$(echo "$old_data" | cut -d',' -f1)
-old_time=$(echo "$old_data" | cut -d',' -f2)
+# 🔄 Run all experiments
+echo "========================="
+echo "🏁 Running Experiments..."
+echo "========================="
+for scenario in "${scenarios[@]}"; do
+  IFS='-' read -ra parts <<< "$scenario"
+  pyver="${parts[0]}"
+  task="${parts[1]}"
+  method="${parts[2]}"
+  mode="${parts[3]}"
 
-# Run experiment for python3.14
-new_data=$(run_experiment "$PYTHON_NEW" "energy_new.csv")
-new_joules=$(echo "$new_data" | cut -d',' -f1)
-new_time=$(echo "$new_data" | cut -d',' -f2)
+  # Pick correct script
+  script_name=""
+  if [[ "$task" == "collatz" ]]; then
+    script_name="$COLLATZ_SCRIPT"
+  else
+    script_name="$MATRIX_SCRIPT"
+  fi
 
-# Append numeric values to CSV
-echo "3.11, $old_joules, $old_time" >> "$OUTPUT_FILE"
-echo "3.14, $new_joules, $new_time" >> "$OUTPUT_FILE"
+  # Run experiment and log results
+  data=$(run_experiment "$pyver" "$script_name" "$method" "$mode")
+  echo "$data" >> "$OUTPUT_FILE"
 
-echo "Results saved in $OUTPUT_FILE"
+  # 💤 Rest 1 min between runs
+  echo "⏳ Resting for 1 minute before next run..."
+  sleep 60
+done
+
+echo "========================="
+echo "✅ All runs complete! Results saved in $OUTPUT_FILE"
+echo "========================="

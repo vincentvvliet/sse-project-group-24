@@ -2,20 +2,35 @@ import time
 import random
 import subprocess
 import os
-import signal
+import dotenv
+from pathlib import Path
+from analyse import process_results
 
-benchmark_script = "C:\\Users\\Luc\\sse-project-group-24\\project-1\\benchmark.py"
+dotenv.load_dotenv()
+
+PROJECT_ROOT = Path(__file__).resolve().parent
+
+# Path to benchmark script.
+benchmark_script = PROJECT_ROOT / "benchmark.py"
+
+# Path to output directory. Create if it doesn't exist.
+output_dir = PROJECT_ROOT / "energy_results"
+os.makedirs(output_dir, exist_ok=True)
+
+# Define subdirectories for Python versions
+python311_dir = output_dir / "python3.11_runs"
+python314_dir = output_dir / "python3.14_runs"
+
+# Ensure subdirectories exist
+os.makedirs(python311_dir, exist_ok=True)
+os.makedirs(python314_dir, exist_ok=True)
 
 # Define paths to Python versions
-python_311 = "C:\\Users\\Luc\\AppData\\Local\\Programs\\Python\\Python311\\python.exe"
-python_314 = "C:\\Users\\Luc\\AppData\\Local\\Programs\\Python\\Python314\\python.exe"
-
+python_311 = os.getenv("PYTHON_3.11_PATH")
+python_314 = os.getenv("PYTHON_3.14_PATH")
 
 # Path to EnergyBridge
-energybridge_exe = r"C:\Users\Luc\Desktop\energibridge\energibridge.exe"
-
-output_dir = r"C:\Users\Luc\sse-project-group-24\project-1\energy_results"
-os.makedirs(output_dir, exist_ok=True)
+energybridge_exe = os.getenv("ENERGIBRIDGE_PATH")
 
 def warm_up_cpu(duration=300):
     print("Warming up CPU for 5 minutes...")
@@ -33,8 +48,11 @@ def start_energybridge(output_file):
 def run_test(python_path, version_label, run_number):
     print(f"Running {version_label}, Run {run_number}...")
 
+    # Determine the correct output directory
+    output_subdir = python311_dir if version_label == "Python3.11" else python314_dir
+
     # Generate unique CSV filename for this run
-    energy_csv = os.path.join(output_dir, f"energy_{version_label}_run{run_number}.csv")
+    energy_csv = output_subdir / f"energy_{version_label}_run{run_number}.csv"
 
     # Start EnergyBridge measurement
     energy_process = start_energybridge(energy_csv)
@@ -50,6 +68,8 @@ def run_test(python_path, version_label, run_number):
 
 # Prepare randomized test order
 test_order = [(version, idx + 1) for idx, version in enumerate(["3.11"] * 30 + ["3.14"] * 30)]
+# Set seed for reproducibility
+random.seed(seed=42)
 random.shuffle(test_order)
 
 warm_up_cpu()
@@ -61,5 +81,6 @@ for version, run_number in test_order:
     run_test(python_exe, f"Python{version}", run_number)
     time.sleep(60)
 
-print("Experiment complete! Energy results saved in energy_results.csv")
+print("Experiment complete! Energy results saved in energy_results")
 
+process_results(python311_dir, python314_dir)

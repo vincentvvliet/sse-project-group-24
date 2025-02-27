@@ -18,7 +18,7 @@ def multiply_matrices(A, B):
     
     return result
 
-def matrix_multiplication_benchmark(size=300, seed=42):
+def matrix_multiplication_benchmark(size=1000, seed=42):
     """Runs the matrix multiplication benchmark and records execution time."""
     print(f"Generating {size}x{size} matrices...")
     A = generate_matrix(size, seed)

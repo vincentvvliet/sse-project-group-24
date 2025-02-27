@@ -42,7 +42,7 @@ if (Is-PythonInstalled $pythonExe311) {
 
     Write-Host "Installing Python $python311Version to $targetDir311 (silent mode)..."
     # Use silent install options: /quiet for no UI, InstallAllUsers=1 for all users, PrependPath=0 to not modify PATH, Include_pip=1 to ensure pip is installed, and our TargetDir
-    $installArgs311 = '/quiet InstallAllUsers=0 PrependPath=0 Include_pip=1 TargetDir="{0}"' -f $targetDir311
+    $installArgs311 = '/quiet PrependPath=1 Include_pip=1 InstallAllUsers=0 TargetDir="{0}"' -f $targetDir311
     $process311 = Start-Process -FilePath $installerPath311 -ArgumentList $installArgs311 -Wait -Passthru
     Write-Host "Python 3.11 installed successfully in $targetDir311."
 
@@ -71,7 +71,7 @@ if (Is-PythonInstalled $pythonExe314) {
     Write-Host "Downloading Python 3.14..."
     Invoke-WebRequest -Uri $downloadUrl314 -OutFile $installerPath314 -ErrorAction Stop
     Write-Host "Installing Python 3.14..."
-    $installArgs314 = '/quiet InstallAllUsers=1 PrependPath=0 Include_pip=1 TargetDir="{0}"' -f $targetDir314
+    $installArgs314 = '/quiet InstallAllUsers=0 PrependPath=0 Include_pip=1 TargetDir="{0}"' -f $targetDir314
     $process311 = Start-Process -FilePath $installerPath314 -ArgumentList $installArgs314 -Wait -Passthru
     Write-Host "Python 3.14 installed successfully in $targetDir314."
 }

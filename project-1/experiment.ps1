@@ -91,9 +91,12 @@ if ($env:PATH -notlike "*$targetDir311*") {
 }
 Write-Host "PATH updated. (New entries: $pathsToAdd)"
 
+
 # Step 4: Set PYTHON_3_11_PATH and PYTHON_3_14_PATH environment variables (for current session and system)
 $env:PYTHON_3_11_PATH = "$targetDir311\python.exe"
+[System.Environment]::SetEnvironmentVariable("PYTHON_3_11_PATH", $env:PYTHON_3_11_PATH, "User")
 $env:PYTHON_3_14_PATH = "$targetDir314\python.exe"
+[System.Environment]::SetEnvironmentVariable("PYTHON_3_14_PATH", $env:PYTHON_3_14_PATH, "User")
 $env:PATH += ";C:\Python311\Scripts"
 Write-Host "Set PYTHON_3_11_PATH and PYTHON_3_14_PATH environment variables."
 
@@ -137,6 +140,11 @@ if (-not (Test-Path $energiBridgeDir)) {
     Write-Host "EnergiBridge is already installed at $energiBridgeDir. Skipping download."
 }
 
+# Set energibridge executable as environment variable
+$env:ENERGIBRIDGE_PATH = "$energiBridgeDir\energibridge.exe"
+[System.Environment]::SetEnvironmentVariable("ENERGIBRIDGE_PATH", $env:ENERGIBRIDGE_PATH, "User")
+Write-Host "Set ENERGIBRIDGE_PATH to $env:ENERGIBRIDGE_PATH"
+
 # Step 7: Locate and Install the RAPL Kernel Driver
 $raplDriver = Get-ChildItem -Path $energiBridgeDir -Filter "LibreHardwareMonitor.sys" -Recurse | Select-Object -ExpandProperty FullName
 
@@ -162,16 +170,15 @@ if ($raplDriver) {
 
 # Step 8: Execute the experiment script using Python 3.11
 $experimentScript = "main.py"
+
 if (Test-Path $experimentScript) {
     Write-Host "Running experiment script ($experimentScript) with Python 3.11..."
-    try {
-        & $env:PYTHON_3_11_PATH $experimentScript
-        Write-Host "experiment script completed."
-    } catch {
-        Write-Error "experiment script execution failed. `nError: $($_.Exception.Message)"
-        exit 1
-    }
+
+    # Run Python faster using CMD instead of PowerShell
+    $pythonCmd = "$env:PYTHON_3_11_PATH $experimentScript"
+    Start-Process "cmd.exe" -ArgumentList "/c $env:PYTHON_3_11_PATH main.py" -NoNewWindow -Wait
+    Write-Host "Experiment script completed."
 } else {
-    Write-Error "experiment script '$experimentScript' not found. Ensure the script is in the current directory."
+    Write-Error "Experiment script '$experimentScript' not found. Ensure the script is in the current directory."
     exit 1
 }

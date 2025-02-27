@@ -69,7 +69,7 @@ def run_test(python_path, version_label, run_number):
 # Prepare randomized test order
 test_order = [(version, idx + 1) for idx, version in enumerate(["3.11"] * 30 + ["3.14"] * 30)]
 # Set seed for reproducibility
-random.seed(seed=42)
+random.seed(42)
 random.shuffle(test_order)
 
 warm_up_cpu()

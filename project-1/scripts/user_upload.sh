@@ -6,8 +6,8 @@ UPLOAD_DIR="user_benchmarks/"
 mkdir -p "$BENCHMARK_DIR"
 mkdir -p "$UPLOAD_DIR"
 
-echo "📤 Please upload your benchmark script(s) to '$UPLOAD_DIR'."
-echo "✅ Detecting uploaded scripts..."
+echo "Please upload your benchmark script(s) to '$UPLOAD_DIR'."
+echo "Detecting uploaded scripts..."
 
 for script in "$UPLOAD_DIR"/*.py; do
     if [[ -f "$script" ]]; then
@@ -17,4 +17,4 @@ for script in "$UPLOAD_DIR"/*.py; do
     fi
 done
 
-echo "✅ All uploaded scripts moved to $BENCHMARK_DIR"
+echo "All uploaded scripts moved to $BENCHMARK_DIR"

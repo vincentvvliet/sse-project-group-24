@@ -10,7 +10,7 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
     echo "🐧 Detected Linux"
     PYTHON_INSTALL_CMD="sudo apt install python3.11 python3.14 -y"
 else
-    echo "❌ Unsupported OS: $OSTYPE"
+    echo "Unsupported OS: $OSTYPE"
     exit 1
 fi
 
@@ -39,7 +39,7 @@ if ! command -v energibridge &> /dev/null; then
     echo "export PATH=\"$PWD/target/release:\$PATH\"" >> ~/.zshrc
     cd ..
 else
-    echo "✅ EnergiBridge is already installed."
+    echo "EnergiBridge is already installed."
 fi
 
 # Check if EnergiBridge is running
@@ -49,7 +49,7 @@ if ! pgrep -x "energibridge" > /dev/null; then
     nohup "$ENERGIBRIDGE" > /dev/null 2>&1 &
     sleep 2  # Give it time to start
 else
-    echo "✅ EnergiBridge is already running."
+    echo "EnergiBridge is already running."
 fi
 
-echo "✅ Environment setup complete!"
+echo "Environment setup complete!"

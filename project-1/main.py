@@ -6,8 +6,6 @@ import dotenv
 from pathlib import Path
 from analyse import process_results
 
-dotenv.load_dotenv()
-
 PROJECT_ROOT = Path(__file__).resolve().parent
 
 # Path to benchmark script.
@@ -26,13 +24,13 @@ os.makedirs(python311_dir, exist_ok=True)
 os.makedirs(python314_dir, exist_ok=True)
 
 # Define paths to Python versions
-python_311 = os.getenv("PYTHON_3.11_PATH")
-python_314 = os.getenv("PYTHON_3.14_PATH")
+python_311 = os.getenv("PYTHON_3_11_PATH")
+python_314 = os.getenv("PYTHON_3_14_PATH")
 
 # Path to EnergyBridge
 energybridge_exe = os.getenv("ENERGIBRIDGE_PATH")
 
-def warm_up_cpu(duration=300):
+def warm_up_cpu(duration=3):
     print("Warming up CPU for 5 minutes...")
     start_time = time.time()
     while time.time() - start_time < duration:
@@ -56,7 +54,7 @@ def run_test(python_path, version_label, run_number):
 
     # Start EnergyBridge measurement
     energy_process = start_energybridge(energy_csv)
-    
+
     # Run Python script
     subprocess.run([python_path, benchmark_script], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     

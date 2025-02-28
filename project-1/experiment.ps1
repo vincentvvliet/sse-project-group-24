@@ -76,44 +76,7 @@ if (Is-PythonInstalled $pythonExe314) {
     Write-Host "Python 3.14 installed successfully in $targetDir314."
 }
 
-<#
-# Step 3: Configure PATH environment variable to include the new Python install locations
-Write-Host "Updating PATH environment variable to include Python installations..."
-# Get the current system PATH, append new paths if not already present
-$machinePath = [Environment]::GetEnvironmentVariable("Path", "Machine")
-$pathsToAdd = "$targetDir311;$targetDir314"
-if ($machinePath -notlike "*$targetDir311*") {
-    $newMachinePath = $machinePath.TrimEnd(';') + ";" + $pathsToAdd  # append to existing PATH
-    [Environment]::SetEnvironmentVariable("Path", $newMachinePath, "Machine")  # set system PATH
-}
-# Also update the current session PATH so subsequent commands in this script can find the executables
-if ($env:PATH -notlike "*$targetDir311*") {
-    $env:PATH += ";$pathsToAdd"
-}
-Write-Host "PATH updated. (New entries: $pathsToAdd)"
-
-
-# Step 4: Set PYTHON_3_11_PATH and PYTHON_3_14_PATH environment variables (for current session and system)
-$env:PYTHON_3_11_PATH = "$targetDir311\python.exe"
-[System.Environment]::SetEnvironmentVariable("PYTHON_3_11_PATH", $env:PYTHON_3_11_PATH, "User")
-$env:PYTHON_3_14_PATH = "$targetDir314\python.exe"
-[System.Environment]::SetEnvironmentVariable("PYTHON_3_14_PATH", $env:PYTHON_3_14_PATH, "User")
-$env:PATH += ";C:\Python311\Scripts"
-Write-Host "Set PYTHON_3_11_PATH and PYTHON_3_14_PATH environment variables."
-
-# Verify that the Python executables are accessible and print their versions
-try {
-    $py311VersionOutput = & $env:PYTHON_3_11_PATH --version
-    $py314VersionOutput = & $env:PYTHON_3_14_PATH --version
-    Write-Host "Verified Python versions:" 
-    Write-Host " - $py311VersionOutput (installed at $targetDir311)"
-    Write-Host " - $py314VersionOutput (installed at $targetDir314)"
-} catch {
-    Write-Error "Verification failed: One of the Python executables is not accessible. `nError: $($_.Exception.Message)"
-    exit 1
-}#>
-
-# Step 5: Install dependencies from requirements.txt using Python 3.11's pip
+# Step 3: Install dependencies from requirements.txt using Python 3.11's pip
 $requirementsFile = "requirements.txt"
 if (Test-Path $requirementsFile) {
     Write-Host "Installing Python 3.11 dependencies from $requirementsFile..."
@@ -131,7 +94,7 @@ if (Test-Path $requirementsFile) {
     Write-Warning "No requirements.txt found. Skipping dependency installation."
 }
 
-# Step 6: Download and Extract EnergiBridge
+# Step 4: Download and Extract EnergiBridge
 if (-not (Test-Path $energiBridgeDir)) {
     Write-Host "Downloading EnergiBridge..."
     Invoke-WebRequest -Uri $energiBridgeUrl -OutFile $energiBridgeZip -ErrorAction Stop
@@ -141,13 +104,7 @@ if (-not (Test-Path $energiBridgeDir)) {
     Write-Host "EnergiBridge is already installed at $energiBridgeDir. Skipping download."
 }
 
-# Set energibridge executable as environment variable
-<#
-$env:ENERGIBRIDGE_PATH = "$energiBridgeDir\energibridge.exe"
-[System.Environment]::SetEnvironmentVariable("ENERGIBRIDGE_PATH", $env:ENERGIBRIDGE_PATH, "User")
-Write-Host "Set ENERGIBRIDGE_PATH to $env:ENERGIBRIDGE_PATH"#>
-
-# Step 7: Locate and Install the RAPL Kernel Driver
+# Step 5: Locate and Install the RAPL Kernel Driver
 $raplDriver = Get-ChildItem -Path $energiBridgeDir -Filter "LibreHardwareMonitor.sys" -Recurse | Select-Object -ExpandProperty FullName
 
 if ($raplDriver) {
@@ -171,7 +128,7 @@ if ($raplDriver) {
 }
 
 
-# Step: Create or Overwrite .env File
+# Step 6: Create or Overwrite .env File
 $envFilePath = "$PSScriptRoot\.env"  # Save .env file in the script's directory
 
 # Create or overwrite .env file with Python paths
@@ -186,7 +143,7 @@ $envContent | Set-Content -Path $envFilePath -Encoding UTF8 -Force
 
 Write-Host "Saved Python paths to .env file at $envFilePath"
 
-# Step 8: Execute the experiment script using Python 3.11
+# Step 7: Execute the experiment script using Python 3.11
 $experimentScript = "main.py"
 
 if (Test-Path $experimentScript) {

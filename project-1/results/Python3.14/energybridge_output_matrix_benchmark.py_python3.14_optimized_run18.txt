@@ -1,0 +1,1 @@
+Energy consumption in joules: 81.5886893622876 for 20.104696 sec of execution.

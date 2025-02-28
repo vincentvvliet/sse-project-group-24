@@ -43,7 +43,7 @@ else
 fi
 
 # Check if EnergiBridge is running
-echo "🔍 Checking if EnergiBridge is running..."
+echo "Checking if EnergiBridge is running..."
 if ! pgrep -x "energibridge" > /dev/null; then
     echo "⚠️ EnergiBridge is NOT running. Starting it now..."
     nohup "$ENERGIBRIDGE" > /dev/null 2>&1 &

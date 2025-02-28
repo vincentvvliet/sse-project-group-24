@@ -36,8 +36,8 @@ if [[ ! -d "$BENCHMARK_DIR" ]]; then
 fi
 
 BENCHMARK_SCRIPTS=($(ls "$BENCHMARK_DIR"/*.py 2>/dev/null))
-PYTHON_VERSIONS=("python3.11","python3.14")
-MODES=("normal","optimized")
+PYTHON_VERSIONS=("python3.11" "python3.14")
+MODES=("normal" "optimized")
 
 
 run_experiment() {

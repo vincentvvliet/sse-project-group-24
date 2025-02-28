@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from scipy.stats import shapiro, ttest_ind, zscore
+from scipy.stats import shapiro, ttest_ind, zscore, mannwhitneyu
 import glob
 from pathlib import Path
 import os
@@ -32,6 +32,47 @@ def remove_outliers(data):
 
 def cohen_d(x, y):
     return (np.mean(x) - np.mean(y)) / np.sqrt((np.std(x, ddof=1) ** 2 + np.std(y, ddof=1) ** 2) / 2)
+
+def plot_median_difference(energy_311, energy_314):
+    # Compute medians and interquartile ranges (IQR)
+    median_311 = np.median(energy_311)
+    median_314 = np.median(energy_314)
+    
+    iqr_311 = np.percentile(energy_311, 75) - np.percentile(energy_311, 25)
+    iqr_314 = np.percentile(energy_314, 75) - np.percentile(energy_314, 25)
+
+    print(f'Python 3.11 median: {median_311}')
+    print(f'Python 3.14 median: {median_314}')
+
+    median_diff = median_314 - median_311
+    percent_change = (median_diff / median_311) * 100
+
+    print(f"Median Difference: {median_diff:.2f} J")
+    print(f"Percent Change: {percent_change:.2f}%")
+
+    # Create the bar plot with IQR as error bars
+    plt.figure(figsize=(10, 6))
+    bars = plt.bar(
+        ["Python 3.11", "Python 3.14"], 
+        [median_311, median_314], 
+        yerr=[iqr_311 / 2, iqr_314 / 2],  # Half of IQR as error bars
+        capsize=5, 
+        color=["blue", "orange"]
+    )
+
+    # Add labels and title
+    plt.ylabel("Median Energy Consumption (J)")
+    plt.title("Median Energy Consumption Comparison (Python 3.11 vs 3.14)")
+
+    # Show grid for better readability
+    plt.grid(True)
+
+    # Tight layout for spacing
+    plt.tight_layout()
+
+    # Save and show the plot
+    plt.savefig("median_energy_comparison.png", dpi=300)
+    plt.show()
 
 def plot_mean_difference(energy_311, energy_314):
     # Compute means and standard deviations
@@ -99,7 +140,7 @@ def process_results(python_311_folder, python_314_folder):
     energy_311 = remove_outliers(energy_311)
     energy_314 = remove_outliers(energy_314)
 
-    plot_mean_difference(energy_311, energy_314)
+    plot_median_difference(energy_311, energy_314)
 
     # Normality Test (Shapiro-Wilk)
     shapiro_311 = shapiro(energy_311)
@@ -120,10 +161,17 @@ def process_results(python_311_folder, python_314_folder):
     plt.savefig("energy_comparison.png", dpi=300)
     plt.show()
 
-    # Statistical Test (Welch's t-test)
-    _ , p_value = ttest_ind(energy_311, energy_314, equal_var=False, alternative='two-sided')
+    # **Statistical Analysis**
+    if shapiro_311.pvalue > 0.05 and shapiro_314.pvalue > 0.05:
+        # If both are normal, use Welch’s t-test
+        _, p_value = ttest_ind(energy_311, energy_314, equal_var=False, alternative='two-sided')
+        test_used = "Welch's t-test"
+    else:
+        # If at least one is non-normal, use Mann-Whitney U test
+        U1, p_value = mannwhitneyu(energy_311, energy_314, alternative='two-sided')
+        test_used = "Mann-Whitney U test"
 
-    print(f"\nWelch’s t-test results: p-value = {p_value}")
+    print(f"\n{test_used} results: p-value = {p_value}")
 
     # Interpretation
     alpha = 0.05
@@ -132,8 +180,25 @@ def process_results(python_311_folder, python_314_folder):
     else:
         print("No significant difference detected between Python 3.11 and 3.14 energy consumption.")
 
-    d = cohen_d(energy_311, energy_314)
-    print(f"Cohen's d effect size: {d}")
+    print(f'Median Python 3.11: {np.median(energy_311)}')
+    print(f'Median Python 3.14: {np.median(energy_314)}')
+    # **Effect Size Calculations**
+    median_diff = np.median(energy_311) - np.median(energy_314)
+    print(f"Median Difference: {median_diff:.2f} J")
+
+    # **Percentage of pairs supporting a conclusion**
+    N1, N2 = len(energy_311), len(energy_314)
+    percentage_pairs = U1 / (N1 * N2)
+    print(f"Percentage of Pairs Supporting Conclusion: {percentage_pairs * 100:.2f}%")
+
+    # **Common Language Effect Size (CLES)**
+    CLES = percentage_pairs  # Equivalent to ΔM
+    print(f"Common Language Effect Size (CLES): {CLES:.4f}")
+
+    # **Cohen's d Effect Size (if normal)**
+    if test_used == "Welch's t-test":
+        d = cohen_d(energy_311, energy_314)
+        print(f"Cohen's d effect size: {d:.4f}")
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 output_dir = PROJECT_ROOT / "energy_results"

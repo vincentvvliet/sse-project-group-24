@@ -1,4 +1,0 @@
-Python Version,Benchmark Name,Mode,Energy (Joules),Time (Seconds)
-python3.14,collatz_benchmark.py,normal,106.6894687128067,20.09846
-python3.11,matrix_benchmark.py,normal,87.51759766054148,20.078972
-python3.14,collatz_benchmark.py,normal,N/A,N/A

@@ -17,7 +17,7 @@ exec > >(tee -a "$LOG_FILE") 2>&1
 echo "⚙️ Increasing script priority..."
 sudo renice -n -20 -p $$ >/dev/null
 
-echo "🧘 Entering Zen Mode..."
+echo "   Entering Zen Mode..."
 echo "   Close all applications, disable notifications, and unplug unnecessary devices."
 echo "   Ensure stable room temperature."
 echo "   If possible, disable network access for consistency."

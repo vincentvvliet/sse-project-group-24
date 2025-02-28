@@ -40,10 +40,22 @@ def plot_mean_difference(energy_311, energy_314):
     std_311 = np.std(energy_311)
     std_314 = np.std(energy_314)
 
+    print(f'Python 3.11 mean: {mean_311}')
+    print(f'Python 3.14 mean: {mean_314}')
+
+    mean_diff = mean_314 - mean_311
+
+    # Compute percentage change (relative to Python 3.11)
+    percent_change = (mean_diff / mean_311) * 100
+    print(f"Mean Difference: {mean_diff:.2f} J")
+    print(f"Percent Change: {percent_change:.2f}%")
+
     # Compute the standard error of the mean (SEM)
     sem_311 = std_311 / np.sqrt(len(energy_311))
     sem_314 = std_314 / np.sqrt(len(energy_314))
 
+    print(f'Python 3.11 SEM: {sem_311}')
+    print(f'Python 3.14 SEM: {sem_314}')
     # Create the bar plot
     plt.figure(figsize=(10, 6))  # Increase figure size to avoid crowding
     bars = plt.bar(
@@ -107,21 +119,6 @@ def process_results(python_311_folder, python_314_folder):
     # Save or Show the plot
     plt.savefig("energy_comparison.png", dpi=300)
     plt.show()
-
-    # Compute mean energy consumption
-    mean_311 = np.mean(energy_311)
-    mean_314 = np.mean(energy_314)
-
-    # Compute mean difference
-    mean_diff = mean_314 - mean_311
-
-    # Compute percentage change (relative to Python 3.11)
-    percent_change = (mean_diff / mean_311) * 100
-
-    print(f"Mean Energy Consumption (Python 3.11): {mean_311:.2f} J")
-    print(f"Mean Energy Consumption (Python 3.14): {mean_314:.2f} J")
-    print(f"Mean Difference: {mean_diff:.2f} J")
-    print(f"Percent Change: {percent_change:.2f}%")
 
     # Statistical Test (Welch's t-test)
     _ , p_value = ttest_ind(energy_311, energy_314, equal_var=False, alternative='two-sided')

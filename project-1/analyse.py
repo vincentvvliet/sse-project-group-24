@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy.stats import shapiro, ttest_ind, zscore
 import glob
+from pathlib import Path
 import os
 
 # Function to extract energy consumption
@@ -32,6 +33,51 @@ def remove_outliers(data):
 def cohen_d(x, y):
     return (np.mean(x) - np.mean(y)) / np.sqrt((np.std(x, ddof=1) ** 2 + np.std(y, ddof=1) ** 2) / 2)
 
+def plot_mean_difference(energy_311, energy_314):
+    # Compute means and standard deviations
+    mean_311 = np.mean(energy_311)
+    mean_314 = np.mean(energy_314)
+    std_311 = np.std(energy_311)
+    std_314 = np.std(energy_314)
+
+    # Compute the standard error of the mean (SEM)
+    sem_311 = std_311 / np.sqrt(len(energy_311))
+    sem_314 = std_314 / np.sqrt(len(energy_314))
+
+    # Create the bar plot
+    plt.figure(figsize=(10, 6))  # Increase figure size to avoid crowding
+    bars = plt.bar(
+        ["Python 3.11", "Python 3.14"], 
+        [mean_311, mean_314], 
+        yerr=[sem_311, sem_314], 
+        capsize=5, 
+        color=["blue", "orange"]
+    )
+
+    # Add labels and title
+    plt.ylabel("Mean Energy Consumption (J)")
+    plt.title("Mean Energy Consumption Comparison (Python 3.11 vs 3.14)")
+
+    # Annotate the bars with the exact values, with an offset to avoid overlap with error bars
+    for bar in bars:
+        yval = bar.get_height()
+        print(yval)
+        # Add a vertical offset (adjust this as needed) to move the text above the error bars
+        #plt.text(bar.get_x() + bar.get_width() / 2, yval + 0.05, f'{yval:.2f}', ha='center', va='bottom', fontsize=12)
+
+    # Adjust y-axis limits to avoid zoomed-in look
+    plt.ylim(min(mean_311, mean_314) - 1, max(mean_311, mean_314) + 1)  # Adjust this range as needed
+
+    # Show grid for better clarity
+    plt.grid(True)
+
+    # Tight layout for proper spacing
+    plt.tight_layout()
+
+    # Save and show the plot
+    plt.savefig("mean_energy_comparison.png", dpi=300)
+    plt.show()
+
 def process_results(python_311_folder, python_314_folder):
     # Load results
     energy_311 = load_experiment_results(python_311_folder)
@@ -40,6 +86,8 @@ def process_results(python_311_folder, python_314_folder):
     # Remove outliers
     energy_311 = remove_outliers(energy_311)
     energy_314 = remove_outliers(energy_314)
+
+    plot_mean_difference(energy_311, energy_314)
 
     # Normality Test (Shapiro-Wilk)
     shapiro_311 = shapiro(energy_311)
@@ -89,3 +137,12 @@ def process_results(python_311_folder, python_314_folder):
 
     d = cohen_d(energy_311, energy_314)
     print(f"Cohen's d effect size: {d}")
+
+PROJECT_ROOT = Path(__file__).resolve().parent
+output_dir = PROJECT_ROOT / "energy_results"
+os.makedirs(output_dir, exist_ok=True)
+
+# Define subdirectories for Python versions
+python311_dir = output_dir / "python3.11_runs"
+python314_dir = output_dir / "python3.14_runs"
+process_results(python311_dir, python314_dir)

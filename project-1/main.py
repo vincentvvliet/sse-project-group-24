@@ -2,9 +2,12 @@ import time
 import random
 import subprocess
 import os
-import dotenv
+from dotenv import load_dotenv
 from pathlib import Path
 from analyse import process_results
+
+# Load .env file
+load_dotenv()
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 

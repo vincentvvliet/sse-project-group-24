@@ -200,11 +200,12 @@ def process_results(python_311_folder, python_314_folder):
         d = cohen_d(energy_311, energy_314)
         print(f"Cohen's d effect size: {d:.4f}")
 
-PROJECT_ROOT = Path(__file__).resolve().parent
-output_dir = PROJECT_ROOT / "energy_results"
-os.makedirs(output_dir, exist_ok=True)
+if __name__ == "__main__":
+    PROJECT_ROOT = Path(__file__).resolve().parent
+    output_dir = PROJECT_ROOT / "energy_results"
+    os.makedirs(output_dir, exist_ok=True)
 
-# Define subdirectories for Python versions
-python311_dir = output_dir / "python3.11_runs"
-python314_dir = output_dir / "python3.14_runs"
-process_results(python311_dir, python314_dir)
+    # Define subdirectories for Python versions
+    python311_dir = output_dir / "python3.11_runs"
+    python314_dir = output_dir / "python3.14_runs"
+    process_results(python311_dir, python314_dir)

@@ -76,6 +76,7 @@ if (Is-PythonInstalled $pythonExe314) {
     Write-Host "Python 3.14 installed successfully in $targetDir314."
 }
 
+<#
 # Step 3: Configure PATH environment variable to include the new Python install locations
 Write-Host "Updating PATH environment variable to include Python installations..."
 # Get the current system PATH, append new paths if not already present
@@ -110,7 +111,7 @@ try {
 } catch {
     Write-Error "Verification failed: One of the Python executables is not accessible. `nError: $($_.Exception.Message)"
     exit 1
-}
+}#>
 
 # Step 5: Install dependencies from requirements.txt using Python 3.11's pip
 $requirementsFile = "requirements.txt"
@@ -141,9 +142,10 @@ if (-not (Test-Path $energiBridgeDir)) {
 }
 
 # Set energibridge executable as environment variable
+<#
 $env:ENERGIBRIDGE_PATH = "$energiBridgeDir\energibridge.exe"
 [System.Environment]::SetEnvironmentVariable("ENERGIBRIDGE_PATH", $env:ENERGIBRIDGE_PATH, "User")
-Write-Host "Set ENERGIBRIDGE_PATH to $env:ENERGIBRIDGE_PATH"
+Write-Host "Set ENERGIBRIDGE_PATH to $env:ENERGIBRIDGE_PATH"#>
 
 # Step 7: Locate and Install the RAPL Kernel Driver
 $raplDriver = Get-ChildItem -Path $energiBridgeDir -Filter "LibreHardwareMonitor.sys" -Recurse | Select-Object -ExpandProperty FullName
@@ -167,6 +169,22 @@ if ($raplDriver) {
     Write-Error "Error: LibreHardwareMonitor.sys not found in $energiBridgeDir."
     exit 1
 }
+
+
+# Step: Create or Overwrite .env File
+$envFilePath = "$PSScriptRoot\.env"  # Save .env file in the script's directory
+
+# Create or overwrite .env file with Python paths
+$envContent = @"
+PYTHON_3_11_PATH=$targetDir311\python.exe
+PYTHON_3_14_PATH=$targetDir314\python.exe
+ENERGIBRIDGE_PATH=$energiBridgeDir\energibridge.exe
+"@
+
+# Write content to .env file (overwrite if it already exists)
+$envContent | Set-Content -Path $envFilePath -Encoding UTF8 -Force
+
+Write-Host "Saved Python paths to .env file at $envFilePath"
 
 # Step 8: Execute the experiment script using Python 3.11
 $experimentScript = "main.py"

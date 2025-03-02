@@ -32,7 +32,7 @@ It should then install both versions of python, install energibridge, start ener
 
 If the script does not work, or you want to use existing locations for python 3.11, python 3.14, or energibridge, you can still run the experiment by creating a .env file. Fill this file with PYTHON_3.11_PATH="(insert path)", PYTHON_3.14_PATH="(insert path)", and ENERGIBRIDGE_PATH="(insert path)". Then run the experiment by running main.py.
 
-## Setup Instructions
+## Setup Instructions For MacOs and Linux
 
 1. **Install Dependencies**
 
